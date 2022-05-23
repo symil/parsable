@@ -1,4 +1,4 @@
-use crate::{ParseError, string_reader::{ParseOptions, StringReader}, end_of_file::EndOfFile, ItemLocation};
+use crate::{ParseError, string_reader::StringReader, end_of_file::EndOfFile, ItemLocation, ParseOptions};
 
 pub trait Parsable : Sized {
     fn parse_item(reader: &mut StringReader) -> Option<Self>;

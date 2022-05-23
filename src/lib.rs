@@ -11,12 +11,14 @@ mod parse_error;
 mod item_location;
 mod line_col_lookup;
 mod file_info;
+mod parse_options;
 mod token;
 mod end_of_file;
 mod marker_list;
 
 pub use parsable::Parsable;
-pub use string_reader::{StringReader, ParseOptions};
+pub use string_reader::StringReader;
+pub use parse_options::ParseOptions;
 pub use parse_error::ParseError;
 pub use item_location::ItemLocation;
 pub use line_col_lookup::LineColLookup;

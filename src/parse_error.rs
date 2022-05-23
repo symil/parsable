@@ -1,5 +1,4 @@
 use std::rc::Rc;
-
 use crate::file_info::FileInfo;
 
 #[derive(Debug, Clone)]

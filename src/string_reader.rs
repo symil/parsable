@@ -1,21 +1,15 @@
 use std::{collections::{HashMap}, rc::Rc};
 use regex::Regex;
-use crate::{ItemLocation, file_info::FileInfo, Parsable, marker_list::MarkerList};
+use crate::{ItemLocation, file_info::FileInfo, Parsable, marker_list::MarkerList, ParseOptions};
 use super::parse_error::ParseError;
 
 pub struct StringReader {
-    comment_token: &'static str,
+    comment_token: Option<&'static str>,
     file: Rc<FileInfo>,
     index: usize,
     error_index: usize,
     expected: Vec<String>,
     markers: MarkerList
-}
-
-pub struct ParseOptions {
-    pub file_path: Option<String>,
-    pub package_root_path: Option<String>,
-    pub comment_start: Option<&'static str>
 }
 
 static mut REGEXES : Option<HashMap<&'static str, Regex>> = None;
@@ -34,7 +28,7 @@ fn get_regex(pattern: &'static str) -> &'static Regex {
 impl StringReader {
     pub fn new(content: String, options: ParseOptions) -> Self {
         Self {
-            comment_token: options.comment_start.unwrap_or(""),
+            comment_token: options.comment_start,
             file: Rc::new(FileInfo {
                 path: options.file_path.unwrap_or_default(),
                 content,
@@ -160,11 +154,13 @@ impl StringReader {
                 self.index += 1;
             }
 
-            if self.as_str().starts_with(self.comment_token) {
-                done = false;
+            if let Some(comment_token) = self.comment_token {
+                if self.as_str().starts_with(comment_token) {
+                    done = false;
 
-                while self.as_char() != '\n' && self.index < self.content().len() {
-                    self.index += 1;
+                    while self.as_char() != '\n' && self.index < self.content().len() {
+                        self.index += 1;
+                    }
                 }
             }
         }
