@@ -21,7 +21,6 @@ pub use string_reader::StringReader;
 pub use parse_options::ParseOptions;
 pub use parse_error::ParseError;
 pub use item_location::ItemLocation;
-pub use line_col_lookup::LineColLookup;
 pub use parsable_macro::*;
 pub use file_info::FileInfo;
 pub use token::Token;

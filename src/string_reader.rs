@@ -27,13 +27,12 @@ fn get_regex(pattern: &'static str) -> &'static Regex {
 
 impl StringReader {
     pub fn new(content: String, options: ParseOptions) -> Self {
+        let path = options.file_path.unwrap_or_default();
+        let package_root_path = options.package_root_path.unwrap_or_default();
+
         Self {
             comment_token: options.comment_start,
-            file: Rc::new(FileInfo {
-                path: options.file_path.unwrap_or_default(),
-                content,
-                package_root_path: options.package_root_path.unwrap_or_default(),
-            }),
+            file: Rc::new(FileInfo::new(content, path, package_root_path)),
             index: 0,
             error_index: 0,
             expected: vec![],

@@ -1,3 +1,4 @@
+#[derive(Debug, Default)]
 pub struct LineColLookup {
     pub lookup: Vec<(usize, usize)>
 }
@@ -26,7 +27,7 @@ impl LineColLookup {
         Self { lookup }
     }
 
-    pub fn get(&self, index: usize) -> (usize, usize) {
-        self.lookup[index]
+    pub fn get(&self, index: usize) -> Option<(usize, usize)> {
+        self.lookup.get(index).cloned()
     }
 }

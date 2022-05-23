@@ -110,9 +110,8 @@ impl Eq for ItemLocation {
 
 impl Debug for ItemLocation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let lookup = self.file.compute_lookup_index();
-        let (start_line, start_col) = lookup.get(self.start);
-        let (end_line, end_col) = lookup.get(self.end);
+        let (start_line, start_col) = self.file.get_line_col(self.start).unwrap();
+        let (end_line, end_col) = self.file.get_line_col(self.end).unwrap();
 
         write!(f, "{}: ({},{})->({}:{})", &self.file.path, start_line, start_col, end_line, end_col)
     }

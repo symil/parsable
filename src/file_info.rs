@@ -1,16 +1,23 @@
 use std::hash::Hash;
-use crate::LineColLookup;
+use crate::line_col_lookup::LineColLookup;
 
 #[derive(Debug, Default)]
 pub struct FileInfo {
     pub content: String,
     pub path: String,
     pub package_root_path: String,
+    line_col_lookup: LineColLookup,
 }
 
 impl FileInfo {
-    pub fn compute_lookup_index(&self) -> LineColLookup {
-        LineColLookup::new(&self.content)
+    pub fn new(content: String, path: String, package_root_path: String) -> Self {
+        let line_col_lookup = LineColLookup::new(&content);
+
+        Self { content, path, package_root_path, line_col_lookup }
+    }
+
+    pub fn get_line_col(&self, offset: usize) -> Option<(usize, usize)> {
+        self.line_col_lookup.get(offset)
     }
 }
 
