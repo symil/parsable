@@ -16,8 +16,8 @@ impl FileInfo {
         Self { content, path, package_root_path, line_col_lookup }
     }
 
-    pub fn get_line_col(&self, offset: usize) -> Option<(usize, usize)> {
-        self.line_col_lookup.get(offset)
+    pub fn get_line_col(&self, index: usize) -> Option<(usize, usize)> {
+        self.line_col_lookup.get(index)
     }
 }
 
