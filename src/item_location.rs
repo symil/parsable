@@ -1,5 +1,5 @@
 use std::{collections::hash_map::DefaultHasher, hash::{Hash, Hasher}, rc::Rc, fmt::Debug, path::{Path}};
-use crate::{file_info::FileInfo, LineColLookup};
+use crate::{file_info::FileInfo};
 
 #[derive(Clone, Default)]
 pub struct ItemLocation {
@@ -79,10 +79,6 @@ impl ItemLocation {
         &self.file.content[self.start..self.end]
     }
 
-    pub fn compute_lookup_index(&self) -> LineColLookup {
-        LineColLookup::new(&self.file.content)
-    }
-
     pub fn length(&self) -> usize {
         self.end - self.start
     }
@@ -114,7 +110,7 @@ impl Eq for ItemLocation {
 
 impl Debug for ItemLocation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let lookup = self.compute_lookup_index();
+        let lookup = self.file.compute_lookup_index();
         let (start_line, start_col) = lookup.get(self.start);
         let (end_line, end_col) = lookup.get(self.end);
 
