@@ -342,7 +342,21 @@ fn main() {
 }
 ```
 
-See the `StringReader` documentation (TODO).
+`StringReader` wraps the string being parsed with an index that increases as the parsing goes on. It has the following methods:
+
+- `content() -> &str`: returns the whole string
+- `get_index() -> usize`: returns the current index in the string
+- `set_index(index: usize) -> usize`: set the current index in the string
+- `as_str() -> &str`: returns the part of the string that has not been parsed yet (same as `&self.content()[self.get_index()..]`)
+- `as_char() -> char`: returns the current character (same as `&self.content().as_bytes()[self.get_index()]`)
+- `is_finished() -> bool`: indicates whether the end of the string has been reached
+- `advance(length: usize) -> Option<&str>`: advance the current index by `length` and returns the corresponsing substring. If `length` is `0`, returns `None`
+- `eat_spaces()`: advance the current index until a non-blank and non-comment character is reached
+- `read_string(string: &str) -> Option<&str>`: if the string starts with `string`, advance the current index by `string`'s length and returns it, otherwise returns `None`
+- `read_regex(pattern: &'static str) -> Option<&str>`: if the string starts with the specified regex pattern, advance the current index the parsed string'length and returns it, otherwise returns `None`
+- `peek_regex(pattern: &'static str) -> bool`: indicates if the string starts with the specified regex pattern, without advancing the current index
+
+If `parse_item` returns `None`, it must ensure that the index is the same when the function exits as it was when it started.
 
 ## License
 
