@@ -209,7 +209,7 @@ The `file_path` and `package_root_path` fields are forwarded to the `FileInfo` s
 
 Blank characters (spaces, new lines and tabulations) are always ignored during parsing.
 
-## File info
+## FileInfo
 
 The `FileInfo` structure is used accross the library. It has the following fields:
 
@@ -221,13 +221,14 @@ It also provides the following methods:
 
 - `get_line_col(index: usize) -> Option<(usize, usize)>`: returns the line and column numbers (starting at 1) associated with the specified character index. This method assumes 1 character per byte and therefore does not work properly when the file contains non-ascii characters.
 
-## Item location
+## ItemLocation
 
-Tagging a struct with `#[parsable]` adds a `location` field of type `ItemLocation` with the following fields:
+Tagging a struct with `#[parsable]` adds a `location` field of type `ItemLocation` with the following fields & methods:
 
 - `file: Rc<FileInfo>`: information on the file containing the item
 - `start: usize`: starting index of the item in the file
 - `end: usize`: ending index of the item in the file
+- `get_start_line_col() -> (usize, usize)`: get the line and column numbers (starting at 1) of the location start
 
 The `Parsable` also trait provides a `location()` method:
 
@@ -261,7 +262,7 @@ fn main() {
 }
 ```
 
-## Parse error
+## ParseError
 
 On failure, `Parsable::parse()` returns `Err(ParseError)`. This structure has the following fields:
 

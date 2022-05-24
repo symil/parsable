@@ -1,7 +1,7 @@
 [package]
 name = "parsable"
 description = "A trait to easily parse data structures."
-version = "0.1.1"
+version = "0.1.2"
 edition = "2018"
 authors = [ "Sylvain Milan <milan.sylvain@gmail.com> "]
 repository = "https://github.com/symil/parsable"

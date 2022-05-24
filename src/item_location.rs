@@ -25,6 +25,10 @@ impl ItemLocation {
         hasher.finish()
     }
 
+    pub fn get_start_line_col(&self) -> (usize, usize) {
+        self.file.get_line_col(self.start).unwrap()
+    }
+
     pub fn get_end(&self) -> Self {
         self.clone().set_bounds(self.end)
     }
