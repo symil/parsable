@@ -13,6 +13,42 @@ Implementation of a basic operation interpreter that only works with positive in
 use parsable::{parsable, Parsable, ParseOptions};
 
 #[parsable]
+enum Operator {
+    Plus = "+",
+    Minus = "-",
+    Mult = "*",
+    Div = "/",
+    Mod = "%"
+}
+
+#[parsable]
+struct NumberLiteral {
+    #[parsable(regex=r"\d+")]
+    value: String
+}
+
+impl NumberLiteral {
+    fn process(&self) -> i32 {
+        self.value.parse().unwrap()
+    }
+}
+
+#[parsable]
+enum Operand {
+    Number(NumberLiteral),
+    Wrapped(WrappedOperation)
+}
+
+impl Operand {
+    fn process(&self) -> i32 {
+        match self {
+            Operand::Number(number) => number.process(),
+            Operand::Wrapped(wrapped) => wrapped.process(),
+        }
+    }
+}
+
+#[parsable]
 struct Operation {
     first_operand: Operand,
     other_operands: Vec<(Operator, Operand)>
@@ -39,33 +75,6 @@ impl Operation {
 }
 
 #[parsable]
-enum Operand {
-    Number(NumberLiteral),
-    Wrapped(WrappedOperation)
-}
-
-impl Operand {
-    fn process(&self) -> i32 {
-        match self {
-            Operand::Number(number) => number.process(),
-            Operand::Wrapped(wrapped) => wrapped.process(),
-        }
-    }
-}
-
-#[parsable]
-struct NumberLiteral {
-    #[parsable(regex=r"\d+")]
-    value: String
-}
-
-impl NumberLiteral {
-    fn process(&self) -> i32 {
-        self.value.parse().unwrap()
-    }
-}
-
-#[parsable]
 struct WrappedOperation {
     #[parsable(brackets="()")]
     operation: Box<Operation>
@@ -75,15 +84,6 @@ impl WrappedOperation {
     fn process(&self) -> i32 {
         self.operation.process()
     }
-}
-
-#[parsable]
-enum Operator {
-    Plus = "+",
-    Minus = "-",
-    Mult = "*",
-    Div = "/",
-    Mod = "%"
 }
 
 fn main() {
@@ -103,7 +103,9 @@ fn main() {
 
 ## The `#[parsable]` macro
 
-Tagging a struct or enum with the `#[parsable]` macro implements the `Parsable` trait for the item, with the condition that all fields must also implement the `Parsable` trait. It can also be used on a field to tweak the way it is parsed.
+Tagging a struct or enum with the `#[parsable]` macro implements the `Parsable` trait for the item, with the condition that all fields must also implement the `Parsable` trait.
+
+It can also be applied on a field to tweak the way it is parsed.
 
 ### Struct
 
@@ -123,14 +125,14 @@ enum MyOperation {
     Zero = "zero"
 }
 
-// If the first two variants are swapped, then the parsing will never reach the `SimpleOperation` variant
+// If the first two variants are swapped, the parsing will never reach the `BinaryOperation` variant.
 ```
 
 ## Builtin types
 
 ### `String`
 
-A string field must be tagged with the `#[parsable(regex="<pattern>")]` or `#[parsable(value="<pattern>")]` macro option to specify how to parse it.
+A string field must be tagged with the `#[parsable(regex="<pattern>")]` or `#[parsable(value="<string>")]` macro option to specify how to parse it.
 
 ```rust
 // Matches at least one digit
@@ -142,7 +144,6 @@ struct NumberLiteral {
 ```
 
 ```rust
-
 #[parsable]
 // Only matches the string "+"
 struct PlusSign {
@@ -162,7 +163,7 @@ enum Sign {
     Minus = "-"
 }
 
-// Matches a number with an optional sign
+// Matches a number with an optional sign.
 #[parsable]
 struct NumberLiteral {
     sign: Option<Sign>,
