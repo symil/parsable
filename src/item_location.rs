@@ -1,5 +1,5 @@
-use std::{collections::hash_map::DefaultHasher, hash::{Hash, Hasher}, rc::Rc, fmt::Debug, path::{Path}};
-use crate::{file_info::FileInfo};
+use std::{collections::hash_map::DefaultHasher, hash::{Hash, Hasher}, rc::Rc, fmt::Debug, path::Path};
+use crate::file_info::FileInfo;
 
 #[derive(Clone, Default)]
 pub struct ItemLocation {

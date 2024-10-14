@@ -1,4 +1,4 @@
-use std::{collections::{HashMap}, rc::Rc};
+use std::{collections::HashMap, rc::Rc, ptr};
 use regex::Regex;
 use crate::{ItemLocation, file_info::FileInfo, Parsable, marker_list::MarkerList, ParseOptions};
 use super::parse_error::ParseError;
@@ -15,7 +15,7 @@ pub struct StringReader {
 static mut REGEXES : Option<HashMap<&'static str, Regex>> = None;
 
 fn get_regex(pattern: &'static str) -> &'static Regex {
-    let regexes_opt = unsafe { &mut REGEXES };
+    let regexes_opt = unsafe { &mut *ptr::addr_of_mut!(REGEXES) };
     let regexes = regexes_opt.get_or_insert(HashMap::new());
 
     if !regexes.contains_key(pattern) {
