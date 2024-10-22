@@ -238,7 +238,7 @@ impl StringReader {
 
 fn is_space(c: char) -> bool {
     match c {
-        ' ' | '\n' | '\t' => true,
+        ' ' | '\r' | '\n' | '\t' => true,
         _ => false
     }
 }
