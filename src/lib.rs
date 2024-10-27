@@ -1,8 +1,3 @@
-#![allow(incomplete_features)]
-#![feature(hash_set_entry)]
-#![feature(const_format_args)]
-#![feature(adt_const_params)]
-
 mod utils;
 mod parsable;
 mod string_reader;
@@ -23,4 +18,3 @@ pub use parse_error::ParseError;
 pub use item_location::ItemLocation;
 pub use parsable_macro::*;
 pub use file_info::FileInfo;
-pub use token::Token;

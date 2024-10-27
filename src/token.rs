@@ -1,47 +1,49 @@
-use std::ops::Deref;
-use crate::{ItemLocation, Parsable};
-
-#[derive(Debug)]
-pub struct Token<const TOKEN: &'static str> {
-    pub token: &'static str,
-    pub location: ItemLocation
-}
-
-impl<const TOKEN: &'static str> Parsable for Token<TOKEN> {
-    fn parse_item(reader: &mut crate::StringReader) -> Option<Self> {
-        let start = reader.get_index();
-
-        match reader.read_string(TOKEN) {
-            Some(_) => Some(Self {
-                token: TOKEN,
-                location: reader.get_item_location(start),
-            }),
-            None => None,
+#[macro_export]
+macro_rules! create_token_struct {
+    ($struct_name:ident, $content:literal) => {
+        #[derive(Debug)]
+        pub struct $struct_name {
+            pub token: &'static str,
+            pub location: parsable::ItemLocation
         }
-    }
 
-    fn get_item_name() -> String {
-        format!("\"{}\"", TOKEN)
-    }
+        impl parsable::Parsable for $struct_name {
+            fn parse_item(reader: &mut parsable::StringReader) -> Option<Self> {
+                let start = reader.get_index();
 
-    fn location(&self) -> &ItemLocation {
-        &self.location
-    }
-}
+                match reader.read_string($content) {
+                    Some(_) => Some(Self {
+                        token: $content,
+                        location: reader.get_item_location(start),
+                    }),
+                    None => None,
+                }
+            }
 
-impl<const TOKEN: &'static str> Deref for Token<TOKEN> {
-    type Target = ItemLocation;
+            fn get_item_name() -> String {
+                format!("\"{}\"", $content)
+            }
 
-    fn deref(&self) -> &Self::Target {
-        &self.location
-    }
-}
+            fn location(&self) -> &parsable::ItemLocation {
+                &self.location
+            }
+        }
 
-impl<const TOKEN: &'static str> Default for Token<TOKEN> {
-    fn default() -> Self {
-        Self {
-            token: TOKEN,
-            location: Default::default()
+        impl std::ops::Deref for $struct_name {
+            type Target = parsable::ItemLocation;
+
+            fn deref(&self) -> &Self::Target {
+                &self.location
+            }
+        }
+
+        impl Default for $struct_name {
+            fn default() -> Self {
+                Self {
+                    token: $content,
+                    location: Default::default()
+                }
+            }
         }
     }
 }
