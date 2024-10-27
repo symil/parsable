@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! create_token_struct {
-    ($struct_name:ident, $content:literal) => {
+    ($struct_name:ident, $content:expr) => {
         #[derive(Debug)]
         pub struct $struct_name {
             pub token: &'static str,
